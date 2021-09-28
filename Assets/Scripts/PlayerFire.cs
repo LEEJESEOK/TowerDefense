@@ -18,22 +18,30 @@ public class PlayerFire : MonoBehaviour
     void Start()
     {
         trFirePos = Camera.main.transform;
+
+        print(Camera.main.name);
+
+        if (Camera.main.name.Contains("Main Camera"))
+        {
+            trLeft = Camera.main.transform;
+            trRight = Camera.main.transform;
+        }
     }
 
     void Update()
     {
-        Vector2 stickpos = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick, 
+        Vector2 stickpos = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick,
             OVRInput.Controller.LTouch);
 
-            
+
         //1. ���࿡ ���콺 ���� ��ư�� ������
-        if(Input.GetButtonDown("Fire1") || (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch)))
+        if (Input.GetButtonDown("Fire1") || (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger/* , OVRInput.Controller.RTouch */)))
         {
             FireBullet();
         }
 
         //1. ���࿡ ���콺 ������ ��ư�� ������
-        if(Input.GetButtonDown("Fire2") || (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch)))
+        if (Input.GetButtonDown("Fire2") || (OVRInput.GetDown(OVRInput.Button.One/* , OVRInput.Controller.RTouch */)))
         {
             FireRay();
         }
@@ -42,12 +50,12 @@ public class PlayerFire : MonoBehaviour
     void FireRay()
     {
         //2. ī�޶���ġ, ī�޶�չ��� ���� ������ Ray�� �����
-        // Ray ray = new Ray(trFirePos.position, trFirePos.forward);
+        // Ray ray = new Ray(trLeft.position, trLeft.forward);
         Ray ray = new Ray(trRight.position, trRight.forward);
 
         //3. ���࿡ Ray�� �߻��ؼ� ��򰡿� �ε����ٸ�
         RaycastHit hit;
-        if(Physics.Raycast(ray, out hit))
+        if (Physics.Raycast(ray, out hit))
         {
             //4. ����ȿ�����忡�� ����ȿ���� �����
             GameObject fragment = Instantiate(fragmentFactory);
@@ -58,7 +66,7 @@ public class PlayerFire : MonoBehaviour
             //7. 2�ʵڿ� �ı�����
             Destroy(fragment, 2);
             //8. 만약에 맞은 오브젝트가 Drone이면 파괴
-            if(hit.transform.name.Contains("Drone"))
+            if (hit.transform.name.Contains("Drone"))
             {
                 Destroy(hit.transform.gameObject);
             }
